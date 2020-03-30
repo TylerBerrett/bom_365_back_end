@@ -28,10 +28,9 @@ val test_scriptures = arrayListOf("Ether 1: 1-43", "1 and it", "2 came to pass",
 val test_response = Response("Ether 1: 1-43 - Ether 2:1-12", test_scriptures)
 
 fun initDB() {
-    val dbUri = URI(System.getenv("DATABASE_URL"))
-    val username = dbUri.userInfo.split(":").toTypedArray()[0]
-    val password = dbUri.userInfo.split(":").toTypedArray()[1]
     val url = System.getenv("JDBC_DATABASE_URL")
+    val username = System.getenv("JDBC_DATABASE_USERNAME")
+    val password = System.getenv("JDBC_DATABASE_PASSWORD")
     Database.connect(url, driver = "org.postgresql.Driver", user = username, password = password)
 }
 
