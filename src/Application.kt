@@ -29,9 +29,7 @@ val test_response = Response("Ether 1: 1-43 - Ether 2:1-12", test_scriptures)
 
 fun initDB() {
     val url = System.getenv("JDBC_DATABASE_URL")
-    val username = System.getenv("JDBC_DATABASE_USERNAME")
-    val password = System.getenv("JDBC_DATABASE_PASSWORD")
-    Database.connect(url, driver = "org.postgresql.Driver", user = username, password = password)
+    Database.connect(url, driver = "org.postgresql.Driver")
 }
 
 fun getData(monthInt: Int, dayInt: Int): Response{
@@ -58,7 +56,7 @@ fun getData(monthInt: Int, dayInt: Int): Response{
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
     initDB()
-    //populateDataBase()
+    populateDataBase()
     install(ContentNegotiation) {
         jackson {
             enable(SerializationFeature.INDENT_OUTPUT)
