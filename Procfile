@@ -1,0 +1,1 @@
+web: ./build/install/bom_data_base/bin/bom_data_base
