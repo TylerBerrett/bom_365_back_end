@@ -27,7 +27,7 @@ val test_scriptures = arrayListOf("Ether 1: 1-43", "1 and it", "2 came to pass",
 val test_response = Response("Ether 1: 1-43 - Ether 2:1-12", test_scriptures)
 
 fun initDB() {
-    val url = System.getenv("JDBC_DATABASE_URL")
+    val url = System.getenv("BOM_URL")
     val pass = System.getenv("BOM_PASS")
     Database.connect(url, driver = "org.postgresql.Driver", password = pass)
 }
@@ -67,6 +67,9 @@ fun Application.module(testing: Boolean = false) {
                 val day = call.parameters["day"]!!.toInt()
                 call.respond(getData(month, day))
 
+            }
+            get("/") {
+                call.respond("Hello")
             }
         }
     }
