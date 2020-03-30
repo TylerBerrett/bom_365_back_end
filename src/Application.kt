@@ -24,8 +24,6 @@ import kotlin.collections.ArrayList
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
 data class Response(val main_title: String, val scriptures: ArrayList<String>)
-val test_scriptures = arrayListOf("Ether 1: 1-43", "1 and it", "2 came to pass", "Ether 2: 1-12", "1 after I", "2 was born")
-val test_response = Response("Ether 1: 1-43 - Ether 2:1-12", test_scriptures)
 
 fun initDB() {
     val url = System.getenv("JDBC_DATABASE_URL")
@@ -56,7 +54,7 @@ fun getData(monthInt: Int, dayInt: Int): Response{
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
     initDB()
-    populateDataBase()
+    //populateDataBase()
     install(ContentNegotiation) {
         jackson {
             enable(SerializationFeature.INDENT_OUTPUT)
@@ -67,9 +65,6 @@ fun Application.module(testing: Boolean = false) {
                 val day = call.parameters["day"]!!.toInt()
                 call.respond(getData(month, day))
 
-            }
-            get("/") {
-                call.respond("Hello")
             }
         }
     }
