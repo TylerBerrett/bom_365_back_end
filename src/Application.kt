@@ -27,9 +27,9 @@ val test_scriptures = arrayListOf("Ether 1: 1-43", "1 and it", "2 came to pass",
 val test_response = Response("Ether 1: 1-43 - Ether 2:1-12", test_scriptures)
 
 fun initDB() {
-    val url = System.getenv("BOM_URL")
+    val url = System.getenv("JDBC_DATABASE_URL")
     val pass = System.getenv("BOM_PASS")
-    Database.connect("jdbc:$url", driver = "org.postgresql.Driver", password = pass)
+    Database.connect(url, driver = "org.postgresql.Driver", password = pass)
 }
 
 fun getData(monthInt: Int, dayInt: Int): Response{
