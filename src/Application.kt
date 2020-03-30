@@ -10,11 +10,13 @@ import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.application.*
 import io.ktor.features.ContentNegotiation
+import io.ktor.html.respondHtml
 import io.ktor.jackson.jackson
 import io.ktor.response.*
 import io.ktor.routing.get
 import io.ktor.routing.routing
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.html.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.net.URI
@@ -64,7 +66,25 @@ fun Application.module(testing: Boolean = false) {
                 val month = call.parameters["month"]!!.toInt() - 1
                 val day = call.parameters["day"]!!.toInt()
                 call.respond(getData(month, day))
-
+            }
+            get("/display") {
+                val month = Calendar.getInstance().get(Calendar.MONTH)
+                val day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+                val data = getData(month, day)
+                val style = """ul {list-style: none; margin: 18px; } h1 {text-align:center;} li {margin: 8px;}"""
+                call.respondHtml {
+                    body {
+                        style { unsafe { raw(style) } }
+                        h1 {
+                            +data.main_title
+                        }
+                        ul {
+                            data.scriptures.forEach {
+                                li { +it }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
