@@ -1,10 +1,16 @@
 package com.tylerb.util
 
+import com.google.gson.Gson
+import com.tylerb.model.MonthParent
 import com.tylerb.network.CallBuilder
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.jetbrains.exposed.sql.Month
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.jsoup.Jsoup
 import java.util.*
 import kotlin.collections.ArrayList
@@ -23,6 +29,24 @@ fun getParagraphs(htmlString: String, startVerse: Int, endVerse: Int): java.util
     return paragraphs
 }
 
+fun monthString(montInt: Int): String{
+    val map = mapOf(
+        Calendar.JANUARY to "January",
+        Calendar.FEBRUARY to "February",
+        Calendar.MARCH to "March",
+        Calendar.APRIL to "April",
+        Calendar.MAY to "May",
+        Calendar.JUNE to "June",
+        Calendar.JULY to "July",
+        Calendar.AUGUST to "August",
+        Calendar.SEPTEMBER to "September",
+        Calendar.OCTOBER to "October",
+        Calendar.NOVEMBER to "November",
+        Calendar.DECEMBER to "December"
+    )
+    return map.getValue(montInt)
+}
+
 fun populateDataBase() {
 
     val months = ScriptureReference().months
@@ -31,8 +55,11 @@ fun populateDataBase() {
     val verseList = ArrayList<String>()
 
     for (month in months) {
-        if (month.key == 1) break
-        val monthString = month.key
+        val monthString = monthString(month.key)
+        transaction {
+            SchemaUtils.create(MonthParent(monthString))
+        }
+
         for (day in month.value) {
             val dayInt = day.key
             val verses = day.value
@@ -66,8 +93,14 @@ fun populateDataBase() {
                             finalTitle = sortedList.first()[0]
                             verseList.removeAt(0)
                         }
-                        // Handle logic for adding to db here
-                        println(finalTitle)
+                        val json = Gson().toJson(verseList)
+                        transaction {
+                            MonthParent(monthString).insert {
+                                it[this.day] = dayInt
+                                it[this.title] = finalTitle
+                                it[this.scripture] = json
+                            }
+                        }
                     }
                 }
             }

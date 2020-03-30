@@ -40,7 +40,7 @@ class ScriptureReference() {
     )
     private val february = mapOf(
         1 to listOf("1-ne/21", "1", "21"),
-        2 to listOf("1-ne/21", "22", "31", "1-ne/22", "1", "10"),
+        2 to listOf("1-ne/21", "22", "26", "1-ne/22", "1", "10"),
         3 to listOf("1-ne/22", "11", "31"),
         4 to listOf("2-ne/1", "1", "12"),
         5 to listOf("2-ne/1", "13", "29"),
@@ -65,7 +65,7 @@ class ScriptureReference() {
         24 to listOf("2-ne/16", "1", "13", "2-ne/17", "1", "25"),
         25 to listOf("2-ne/18", "1", "22"),
         26 to listOf("2-ne/19", "1", "21", "2-ne/20", "1", "11"),
-        27 to listOf("2-ne20", "12", "34"),
+        27 to listOf("2-ne/20", "12", "34"),
         28 to listOf("2-ne/21", "1", "16", "2-ne/22", "1", "6"),
         29 to listOf("alma/7", "11", "12")
     )
