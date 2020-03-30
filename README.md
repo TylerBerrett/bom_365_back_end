@@ -8,3 +8,6 @@ example of a return
   "main_title" : "Ether 1: 1-43 - Ether 2:1-12",
   "scriptures" : [ "Ether 1: 1-43", "1 and it", "2 came to pass", "Ether 2: 1-12", "1 after I", "2 was born" ]
 }
+
+Credit to: https://loveandlaundry.com/book-of-mormon-reading-schedule.html
+for calculating the daily scriptures
