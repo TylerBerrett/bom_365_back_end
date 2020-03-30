@@ -28,9 +28,8 @@ val test_response = Response("Ether 1: 1-43 - Ether 2:1-12", test_scriptures)
 
 fun initDB() {
     val url = System.getenv("BOM_URL")
-    val user = System.getenv("BOM_USER")
     val pass = System.getenv("BOM_PASS")
-    Database.connect(url, driver = "org.postgresql.Driver", user = user, password = pass)
+    Database.connect(url, driver = "org.postgresql.Driver", password = pass)
 }
 
 fun getData(monthInt: Int, dayInt: Int): Response{
