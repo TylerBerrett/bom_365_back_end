@@ -81,7 +81,9 @@ fun populateDataBase() {
                     block.add(0, title)
                     verseBlockList.add(block)
                     if (verseBlockList.size == (verses.size / 3)) {
-                        val sortedList = verseBlockList.sortedBy { list -> list[0].split(" ")[1].replace(":", "").toInt() }
+                        val sortedList = verseBlockList.sortedBy {
+                                list -> list[0].split(" ")[1].replace(":", "").toInt()
+                        }
                         var finalTitle = sortedList.first()[0] + " - " + sortedList.last()[0]
                         sortedList.forEach { blockItem ->
                             blockItem.forEach { verse ->
