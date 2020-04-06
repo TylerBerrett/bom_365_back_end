@@ -56,7 +56,7 @@ fun getData(monthInt: Int, dayInt: Int): Response{
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
     initDB()
-    //populateDataBase()
+    populateDataBase()
     install(ContentNegotiation) {
         jackson {
             enable(SerializationFeature.INDENT_OUTPUT)

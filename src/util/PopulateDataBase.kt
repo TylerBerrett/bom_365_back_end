@@ -64,7 +64,6 @@ fun populateDataBase() {
             val dayInt = day.key
             val verses = day.value
 
-            // This is broken
             verseBlockList.clear()
             verseList.clear()
             for (i in verses.indices step 3) {
@@ -82,7 +81,7 @@ fun populateDataBase() {
                     block.add(0, title)
                     verseBlockList.add(block)
                     if (verseBlockList.size == (verses.size / 3)) {
-                        val sortedList = verseBlockList.sortedBy { list -> list[0] }
+                        val sortedList = verseBlockList.sortedBy { list -> list[0].split(" ")[1].replace(":", "").toInt() }
                         var finalTitle = sortedList.first()[0] + " - " + sortedList.last()[0]
                         sortedList.forEach { blockItem ->
                             blockItem.forEach { verse ->
@@ -93,7 +92,9 @@ fun populateDataBase() {
                             finalTitle = sortedList.first()[0]
                             verseList.removeAt(0)
                         }
+                        println(finalTitle)
                         val json = Gson().toJson(verseList)
+
                         transaction {
                             MonthParent(monthString).insert {
                                 it[this.day] = dayInt
