@@ -56,9 +56,7 @@ fun getData(monthInt: Int, dayInt: Int, lang: String = "eng"): Response{
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
     initDB()
-    populateDataBase()
-    populateDataBase("spa")
-    populateDataBase("por")
+    //populateDataBase()
     install(ContentNegotiation) {
         jackson {
             enable(SerializationFeature.INDENT_OUTPUT)
