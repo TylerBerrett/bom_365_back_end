@@ -32,11 +32,11 @@ fun initDB() {
     Database.connect(url, driver = "org.postgresql.Driver")
 }
 
-fun getData(monthInt: Int, dayInt: Int): Response{
+fun getData(monthInt: Int, dayInt: Int, lang: String = "eng"): Response{
     var title = ""
     var scriptures = ArrayList<String>()
     transaction {
-        val month = MonthParent(monthString(monthInt))
+        val month = MonthParent(monthString(monthInt, lang))
         val day = month.select {
             month.day.eq(dayInt)
         }
@@ -56,21 +56,25 @@ fun getData(monthInt: Int, dayInt: Int): Response{
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
     initDB()
-    //populateDataBase()
+    populateDataBase()
+    populateDataBase("spa")
+    populateDataBase("por")
     install(ContentNegotiation) {
         jackson {
             enable(SerializationFeature.INDENT_OUTPUT)
         }
         routing {
-            get("/scripture/{month}/{day}") {
+            get("/scripture/{month}/{day}/{lang?}") {
                 val month = call.parameters["month"]!!.toInt() - 1
                 val day = call.parameters["day"]!!.toInt()
-                call.respond(getData(month, day))
+                val lang = call.parameters["lang"] ?: "eng"
+                call.respond(getData(month, day, lang))
             }
-            get("/display") {
+            get("/display/{lang?}") {
                 val month = Calendar.getInstance().get(Calendar.MONTH)
                 val day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-                val data = getData(month, day)
+                val lang = call.parameters["lang"] ?: "eng"
+                val data = getData(month, day, lang)
                 val style = """ul {list-style: none; margin: 18px; } h1 {text-align:center;} li {margin: 8px;}"""
                 call.respondHtml {
                     body {

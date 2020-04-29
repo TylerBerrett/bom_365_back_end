@@ -5,9 +5,7 @@ import com.tylerb.model.MonthParent
 import com.tylerb.network.CallBuilder
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.jetbrains.exposed.sql.Month
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -29,25 +27,14 @@ fun getParagraphs(htmlString: String, startVerse: Int, endVerse: Int): java.util
     return paragraphs
 }
 
-fun monthString(montInt: Int): String{
-    val map = mapOf(
-        Calendar.JANUARY to "January",
-        Calendar.FEBRUARY to "February",
-        Calendar.MARCH to "March",
-        Calendar.APRIL to "April",
-        Calendar.MAY to "May",
-        Calendar.JUNE to "June",
-        Calendar.JULY to "July",
-        Calendar.AUGUST to "August",
-        Calendar.SEPTEMBER to "September",
-        Calendar.OCTOBER to "October",
-        Calendar.NOVEMBER to "November",
-        Calendar.DECEMBER to "December"
-    )
-    return map.getValue(montInt)
-}
 
-fun populateDataBase() {
+
+fun populateDataBase(lang: String = "eng") {
+    val langSet = setOf("spa", "por")
+    var finalLang = lang
+    if (!langSet.contains(lang)) {
+        finalLang = "eng"
+    }
 
     val months = ScriptureReference().months
 
@@ -55,7 +42,7 @@ fun populateDataBase() {
     val verseList = ArrayList<String>()
 
     for (month in months) {
-        val monthString = monthString(month.key)
+        val monthString = monthString(month.key, finalLang)
         transaction {
             SchemaUtils.create(MonthParent(monthString))
         }
@@ -69,7 +56,7 @@ fun populateDataBase() {
             for (i in verses.indices step 3) {
                 val ref = verses[i]
                 val deferred = GlobalScope.async {
-                    CallBuilder.getScripture().getBook("eng", "/scriptures/bofm/$ref")
+                    CallBuilder.getScripture().getBook(finalLang, "/scriptures/bofm/$ref")
                 }
                 runBlocking {
                     val book = deferred.await()
