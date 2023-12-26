@@ -10,6 +10,7 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jsoup.Jsoup
+import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -36,6 +37,7 @@ fun populateDataBase(lang: String = "eng") {
         finalLang = "eng"
     }
 
+    val scriptures = ArrayList<ScriptureResponse>()
     val months = ScriptureReference().months
 
     val verseBlockList = ArrayList<ArrayList<String>>()
@@ -43,9 +45,9 @@ fun populateDataBase(lang: String = "eng") {
 
     for (month in months) {
         val monthString = monthString(month.key, finalLang)
-        transaction {
-            SchemaUtils.create(MonthParent(monthString))
-        }
+//        transaction {
+//            SchemaUtils.create(MonthParent(monthString))
+//        }
 
         for (day in month.value) {
             val dayInt = day.key
@@ -81,19 +83,28 @@ fun populateDataBase(lang: String = "eng") {
                             finalTitle = sortedList.first()[0]
                             verseList.removeAt(0)
                         }
-                        println(finalTitle)
-                        val json = Gson().toJson(verseList)
+                        //println(finalTitle)
+                        scriptures.add(ScriptureResponse(monthString, dayInt, finalTitle, verseList.toList()))
 
-                        transaction {
-                            MonthParent(monthString).insert {
-                                it[this.day] = dayInt
-                                it[this.title] = finalTitle
-                                it[this.scripture] = json
-                            }
-                        }
+//                        transaction {
+//                            MonthParent(monthString).insert {
+//                                it[this.day] = dayInt
+//                                it[this.title] = finalTitle
+//                                it[this.scripture] = json
+//                            }
+//                        }
                     }
                 }
             }
         }
     }
+    val jsonFile = Gson().toJson(scriptures)
+    File("scriptures.json").writeText(jsonFile)
 }
+
+data class ScriptureResponse(
+    val month: String,
+    val day: Int,
+    val title: String,
+    val scripture: List<String>
+)

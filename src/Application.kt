@@ -23,7 +23,10 @@ import java.net.URI
 import java.util.*
 import kotlin.collections.ArrayList
 
-fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
+//fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
+fun main(args: Array<String>): Unit {
+    populateDataBase()
+}
 
 data class Response(val main_title: String, val scriptures: ArrayList<String>)
 
